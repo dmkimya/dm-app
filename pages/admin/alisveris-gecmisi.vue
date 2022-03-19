@@ -10,7 +10,7 @@
         <b>Yonetim:</b> <input ref="yonetim" type="checkbox" value="yonetim" />
       </div>
       <div style="min-width:5rem;" class="my-2">
-        <b>Dagıtım:</b> <input ref="emrah" type="checkbox" value="emrah" />
+        <b>Dagıtım:</b> <input ref="hakan" type="checkbox" value="hakan" />
       </div>
     </div>
     <b-table
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     onChanged() {
-      this.checkeds = [this.$refs.yonetim, this.$refs.emrah].filter(el => {
+      this.checkeds = [this.$refs.yonetim, this.$refs.hakan].filter(el => {
         if (el.checked) return true;
       });
 

@@ -24,7 +24,7 @@
 export default {
   data() {
     return {
-      workers: ["yonetim", "emrah", "Toplam"],
+      workers: ["yonetim", "hakan", "Toplam"],
       workerCollectedList: []
     };
   },

@@ -1,4 +1,4 @@
-<template >
+<template>
   <div class="section is-flex is-justify-content-center">
     <section v-if="customer">
       <b-table :data="customers">
@@ -48,7 +48,10 @@
         </b-table-column>
 
         <b-table-column>
-          <b-button @click="showDetails" style="width: 100%" class="is-danger is-light"
+          <b-button
+            @click="showDetails"
+            style="width: 100%"
+            class="is-danger is-light"
             >Detay</b-button
           >
         </b-table-column>
@@ -59,6 +62,14 @@
         </b-table-column>
         <b-table-column>
           <PdfButton :customer="customer" />
+        </b-table-column>
+        <b-table-column>
+          <b-button
+            style="width: 100%"
+            @click="removeCustomer"
+            class="is-danger"
+            >SİL</b-button
+          >
         </b-table-column>
       </b-table>
 
@@ -86,7 +97,7 @@ export default {
 
   components: {
     Payment,
-    PdfButton,
+    PdfButton
   },
 
   computed: {
@@ -101,14 +112,53 @@ export default {
       )[0];
 
       this.$store.commit("customer/SET_CUSTOMER", customer);
-      
+
       return new Array(customer);
-    },
+    }
   },
   methods: {
     update() {
       let id = this.$route.params.id;
       this.$router.push(`/${id}/update`);
+    },
+    async removeCustomer() {
+      this.$buefy.dialog.confirm({
+        title: "Uyarı Mesajı",
+        message: `
+                    ${this.customer.company_name} silinecek onaylıyor musun?
+                    `,
+        cancelText: "İptal",
+        confirmText: "Onaylıyorum",
+        type: "is-danger",
+        onConfirm: async () => {
+          const loadingComponent = this.$buefy.loading.open();
+          try {
+            await this.$store.dispatch(
+              "customer/deleteCustomer",
+              this.customer.id
+            );
+            loadingComponent.close();
+            this.$router.push("/");
+            this.$buefy.toast.open({
+              message: "Silme işlemi başarıyla tamamlandı",
+              type: "is-success"
+            });
+          } catch (error) {
+            console.log(error);
+            loadingComponent.close();
+            this.$buefy.dialog.alert({
+              title: "HATA!!!",
+              message: "Silme işlemi tamamlanamadı",
+              type: "is-danger",
+              hasIcon: false,
+              icon: "exclamation",
+              iconPack: "fa",
+              ariaRole: "alertdialog",
+              ariaModal: true
+            });
+          }
+        }
+      });
     },
     showDetails() {
       this.$buefy.dialog.alert({
@@ -136,10 +186,9 @@ export default {
                     <b>Adres:</b>${this.customer.adress}
                     </p>
                     `,
-        confirmText: "OK",
+        confirmText: "OK"
       });
-    },
-   
-  },
+    }
+  }
 };
 </script>
